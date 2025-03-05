@@ -89,9 +89,9 @@ Florianópolis - SC
 🔗 [Portfólio](https://portfolio-3-d-olive.vercel.app/)  
 💼 [LinkedIn](https://www.linkedin.com/in/alexandre-liberato-32179624b/)  
 📧 [E-mail](mailto:alexandreliberatto@gmail.com)  
-📱 [WhatsApp](https://api.whatsapp.com/send?phone=+5584991604054)
+📱 [WhatsApp](https://api.whatsapp.com/send?phone=+5548991604054)
 
-[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://api.whatsapp.com/send?phone=+5584991604054)  
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://api.whatsapp.com/send?phone=+5548991604054)  
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/alexandre-liberato-32179624b/)  
 [![E-mail](https://img.shields.io/badge/E--mail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:alexandreliberatto@gmail.com)
 
