@@ -1,46 +1,106 @@
 document.getElementById('generateButton').addEventListener('click', generateQRCode);
+document.getElementById('clearButton').addEventListener('click', clearFields);
 
-function generateQRCode() {
-  // Obtém o valor do input
-  const text = document.getElementById('textInput').value;
-
-  // Verifica se o campo está vazio
-  if (!text) {
-    mostrarAlertaPersonalizado("⚠️ Atenção!", "Por favor, insira um texto ou URL válido para gerar o QR Code.");
-    return;
-  }
-
-  // Cria um novo QR Code
-  const qr = qrcode(0, 'L'); // Tipo 0 (normal) e nível de correção de erro 'L'
-  qr.addData(text);
-  qr.make();
-
-  // Insere o QR Code no elemento <div>
-  const qrCodeElement = document.getElementById('qrcode');
-  qrCodeElement.innerHTML = qr.createImgTag(6); // Tamanho da imagem (6 = escala)
-
-  // Exibe o botão de download
-  const downloadButton = document.getElementById('downloadButton');
-  downloadButton.style.display = 'inline-block';
-
-  // Adiciona o evento de download ao botão
-  downloadButton.onclick = function () {
-    downloadQRCode(qrCodeElement.querySelector('img'));
-  };
-
-  mostrarAlertaPersonalizado("✅ QR Code Criado com Sucesso!", "Seu QR Code foi gerado e está pronto para uso! Agora você pode compartilhá-lo ou fazer o download da imagem.")
+function clearFields() {
+    document.getElementById('titleInput').value = '';
+    document.getElementById('textInput').value = '';
+    document.getElementById('qrcode').innerHTML = '';
+    document.getElementById('qr-title').textContent = '';
+    document.getElementById('downloadButton').style.display = 'none';
+    mostrarAlertaPersonalizado("🗑️ Campos Limpos!", "Todos os campos foram limpos com sucesso!");
 }
 
-function downloadQRCode(imageElement) {
-  // Cria um link temporário para baixar a imagem
+function generateQRCode() {
+    const text = document.getElementById('textInput').value;
+    const title = document.getElementById('titleInput').value;
+
+    if (!text) {
+        mostrarAlertaPersonalizado("⚠️ Atenção!", "Por favor, insira um texto ou URL válido para gerar o QR Code.");
+        return;
+    }
+
+    // Cria um novo QR Code
+    const qr = qrcode(0, 'L');
+    qr.addData(text);
+    qr.make();
+
+    // Prepara o container do QR Code
+    const qrCodeElement = document.getElementById('qrcode');
+    qrCodeElement.innerHTML = '';
+
+    // Cria um elemento canvas temporário para gerar a imagem com título
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Define o tamanho base do QR Code
+    const qrSize = 200;
+    const padding = title ? 40 : 0; // Espaço para o título
+    
+    // Configura o tamanho do canvas
+    canvas.width = qrSize;
+    canvas.height = qrSize + padding;
+    
+    // Fundo branco
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Adiciona o título se existir
+    if (title) {
+        ctx.font = 'bold 16px Arial';
+        ctx.fillStyle = '#2c3e50';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText(title, canvas.width / 2, 10);
+    }
+
+    // Cria a imagem do QR Code
+    const qrImage = new Image();
+    qrImage.onload = function() {
+        // Desenha o QR Code
+        ctx.drawImage(qrImage, 0, padding, qrSize, qrSize);
+        
+        // Cria a div para o título entre os códigos
+        if (title) {
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'qr-code-title';
+            titleDiv.textContent = title;
+            qrCodeElement.appendChild(titleDiv);
+        }
+        
+        // Adiciona a imagem final
+        const finalImage = document.createElement('img');
+        finalImage.src = canvas.toDataURL('image/png');
+        qrCodeElement.appendChild(finalImage);
+        
+        // Exibe o botão de download
+        const downloadButton = document.getElementById('downloadButton');
+        downloadButton.style.display = 'inline-block';
+        
+        // Adiciona o evento de download ao botão
+        downloadButton.onclick = function() {
+            const fileName = title ? `${title.toLowerCase().replace(/[^a-z0-9]/g, '-')}-qrcode.png` : 'qrcode.png';
+            downloadQRCode(finalImage, fileName);
+        };
+
+        mostrarAlertaPersonalizado("✅ QR Code Criado com Sucesso!", "Seu QR Code foi gerado com o título e está pronto para uso!");
+    };
+
+    // Cria um elemento temporário para obter a URL do QR Code
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = qr.createImgTag(10);
+    const tempImg = tempDiv.querySelector('img');
+    qrImage.src = tempImg.src;
+}
+
+function downloadQRCode(imageElement, fileName) {
   const link = document.createElement('a');
   link.href = imageElement.src;
-  link.download = 'qrcode.png'; // Nome do arquivo
+  link.download = fileName;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 
-  mostrarAlertaPersonalizado("📥 Download Concluído!", "A imagem do QR Code foi baixada com sucesso. Verifique sua pasta de downloads para acessá-la.")
+  mostrarAlertaPersonalizado("📥 Download Concluído!", "A imagem do QR Code foi baixada com sucesso. Verifique sua pasta de downloads para acessá-la.");
 }
 
 //=========== Alçerta Personalizado =============
